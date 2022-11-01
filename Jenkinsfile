@@ -17,17 +17,28 @@ pipeline {
             steps {
                 script{
                     gv.buildJar()
+                    echo "Executing pipeline for branch $BRANCH_NAME"
                 }    
             }
         }
         stage('build image') {
+            when {
+                expression {
+                    BRANCH_NAME == 'master'
+                }
+            }
             steps {
                 script{
                     gv.buildImage()
                 } 
             }
         }
-        stage('Deploy') { 
+        stage('Deploy') {
+            when {
+                expression {
+                    BRANCH_NAME == 'master'
+                }
+            }
             steps {
                 script{
                     gv.deployApp() 
